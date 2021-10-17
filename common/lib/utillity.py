@@ -6,6 +6,7 @@ from selenium.webdriver.support.color import Color
 from configparser import ConfigParser, NoOptionError
 import re, os, sys, time, unittest, pyautogui, psutil
 from common.lib.global_variables import Global_variables
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
 class UtillityMethods:
@@ -1000,4 +1001,38 @@ class UtillityMethods:
         except:
             print("Unable to append in failure capture message '{0}' to verification_failure_msg_list",format(msg))
  
+    def python_move_to_element(self, web_element, element_location='middle', xoffset=0, yoffset=0, mouse_move_duration=0.5):
+        '''
+        Desc:- This function will move physical mouse cursor to the element.
+        :param web_element
+        :param element_location:- middle
+        :param xoffset:- 0, 20...
+        :param yoffset:- 0, 20...
+        :param mouse_move_duration:- 0.5, 1...
+        '''
+        element_coordinate=UtillityMethods.get_web_element_coordinate(self, web_element, element_location=element_location, xoffset=xoffset, yoffset=yoffset)
+        x=element_coordinate['x']
+        y=element_coordinate['y']
+        if Global_variables.browser_name in ['ie', 'edge'] :
+            uisoup.mouse.move(x, y)
+#             autopy.mouse.smooth_move(x, y)
+        else :
+            pyautogui.moveTo(x, y, mouse_move_duration)
+        return (x, y)
+    
+    def left_click(self, web_element, element_location='middle', xoffset=0, yoffset=0, action_chain_click=False, mouse_move_duration=0.5, pause_time=Global_variables.shortwait):
+        '''
+        Desc:- This function will click on any web_element on a specified location using option ActionChains and pyautogui action.
+        :param web_element:- the web element whose co-ordinate to be derived.
+        :param location:- middle, top_left, top_middle, top_right, right_middle, bottom_right, bottom_middle, bottom_left, left_middle, left_top
+        '''
+        if Global_variables.browser_name in ['ie', 'firefox', 'edge'] :
+            UtillityMethods.python_left_click(self, web_element, element_location=element_location, xoffset=xoffset, yoffset=yoffset, mouse_move_duration=mouse_move_duration)
+        else:
+            if action_chain_click==True:
+                ActionChains(self.driver).move_to_element_with_offset(web_element, xoffset, yoffset).click().perform()
+            else:
+                web_element.click()
+        time.sleep(pause_time)
+    
     
