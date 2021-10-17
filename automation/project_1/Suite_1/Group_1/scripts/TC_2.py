@@ -36,13 +36,16 @@ class TC2_TestClass(BaseTestCase):
         task_list_item_parent = (Base._By.CSS_SELECTOR, "div[id^='Action'][id$='Select']")
         task_list_items = (Base._By.CSS_SELECTOR, task_list_item_parent[1] + " li")
         submit_button = (Base._By.CSS_SELECTOR, "button.Primary.CallForAction")
+        message_box = (Base._By.CSS_SELECTOR, "div[class='MessageBox Notice'] p")
+        application_button = (Base._By.CSS_SELECTOR, "ul#ToolBar a img")
+        pop_up_parent = (Base._By.CSS_SELECTOR, "div[style='display: block;']")
+        logout_button = (Base._By.CSS_SELECTOR, "a#LogoutButton")
         
         def select_list_item(list_item, list_locator):
             list_options = Base._utils.validate_and_get_webdriver_objects_using_locator(list_locator, "List Options")
             list_option = Base._javascript.find_elements_by_text(list_options, list_item)      
             Base._javascript.scrollIntoView(list_option[0])
             Base._utils.left_click(list_option[0], action_chain_click=True)
-        
         
         "Step 1"
         Base._driver.get("https://otrs.amtexsystems.com/otrs/")
@@ -74,8 +77,7 @@ class TC2_TestClass(BaseTestCase):
         Base._webelement.wait_until_element_visible(project_list_item_parent, 30)
         select_list_item("IBIQA Team", project_list_items)
         Base._webelement.wait_until_element_invisible(project_list_item_parent, 30)
-        
-        
+          
         Base._utils.validate_and_get_webdriver_object_using_locator(Task_1, "Task 1").click()
         Base._webelement.wait_until_element_visible(task_list_item_parent, 30)
         select_list_item("IBIQA - Automation - New Development", task_list_items)
@@ -104,5 +106,13 @@ class TC2_TestClass(BaseTestCase):
         Base._utils.validate_and_get_webdriver_object_using_locator(end_3, "End 2").send_keys("20:45")
         
         Base._utils.left_click(Base._utils.validate_and_get_webdriver_object_using_locator(submit_button, "Submit Button"), action_chain_click=True)
+        Base._webelement.wait_for_element_text(message_box, "Successful", 30)
+        actual = Base._utils.validate_and_get_webdriver_object_using_locator(message_box, "Message Box").text
+        msg = "Step 01: Successfully insert the data in OTRS"
+        Base._utils.asequal("Successful insert!", actual, msg)        
+        Base._utils.left_click(Base._utils.validate_and_get_webdriver_object_using_locator(application_button, "Application Button"), action_chain_click=True)
+        Base._webelement.wait_until_element_invisible(pop_up_parent, 30)
+        Base._utils.left_click(Base._utils.validate_and_get_webdriver_object_using_locator(logout_button, "Logout Button"), action_chain_click=True)
+        
         
         
