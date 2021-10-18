@@ -37,10 +37,7 @@ class TC2_TestClass(BaseTestCase):
         task_list_items = (Base._By.CSS_SELECTOR, task_list_item_parent[1] + " li")
         submit_button = (Base._By.CSS_SELECTOR, "button.Primary.CallForAction")
         message_box = (Base._By.CSS_SELECTOR, "div[class='MessageBox Notice'] p")
-        application_button = (Base._By.CSS_SELECTOR, "ul#ToolBar a img")
-        pop_up_parent = (Base._By.CSS_SELECTOR, "div[style='display: block;']")
-        logout_button = (Base._By.CSS_SELECTOR, "a#LogoutButton")
-        
+    
         def select_list_item(list_item, list_locator):
             list_options = Base._utils.validate_and_get_webdriver_objects_using_locator(list_locator, "List Options")
             list_option = Base._javascript.find_elements_by_text(list_options, list_item)      
@@ -110,9 +107,5 @@ class TC2_TestClass(BaseTestCase):
         actual = Base._utils.validate_and_get_webdriver_object_using_locator(message_box, "Message Box").text
         msg = "Step 01: Successfully insert the data in OTRS"
         Base._utils.asequal("Successful insert!", actual, msg)        
-        Base._utils.left_click(Base._utils.validate_and_get_webdriver_object_using_locator(application_button, "Application Button"), action_chain_click=True)
-        Base._webelement.wait_until_element_invisible(pop_up_parent, 30)
-        Base._utils.left_click(Base._utils.validate_and_get_webdriver_object_using_locator(logout_button, "Logout Button"), action_chain_click=True)
-        
         
         
